@@ -6,7 +6,7 @@ This tool has been tested and works in macOS 10.14.4
 
 ## Usage
 
-### Enable Night Shift and choose a suitable temperature based on the system time
+### Toggle Night Shift (temp set to 1 when on)
 
 ```bash
 Night\ Shift\ Helper
