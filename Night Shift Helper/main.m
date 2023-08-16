@@ -6,62 +6,28 @@
 //  Copyright © 2019 Creative Sub. All rights reserved.
 //
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-
 #import <Foundation/Foundation.h>
 #import "CBBlueLightClient.h"
-
-
-float getCurrentOptimalTemperature() {
-    NSDate* currentDate = [[NSDate alloc] init];
-    NSCalendar* currentCalendar = [NSCalendar currentCalendar];
-    NSDateComponents* dateComponents = [currentCalendar components:(NSCalendarUnitHour | NSCalendarUnitMinute) fromDate:currentDate];
-    NSInteger hour = [dateComponents hour];
-//    NSInteger minute = [dateComponents minute];
-    
-    switch (hour) {
-        // 1. Warmest.
-        case 24:
-            // Fall through.
-        case 0 ... 5:
-            return 0.8;
-            
-        // 2
-        case 23:
-            // Fall through.
-        case 6:
-            return 0.7;
-            
-        // 3
-        case 19 ... 22:
-            // Fall through.
-        case 7:
-            return 0.5;
-            
-        // 4
-        case 18:
-            // Fall through.
-        case 8:
-            return 0.3;
-            
-        // 5. Coldest.
-        default:
-            return 0.1;
-            break;
-    }
-}
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         CBBlueLightClient* blueLightClient = [[CBBlueLightClient alloc] init];
         
         if (argc == 1) {
-            // Enables Night Shift and set temperature automatically.
-            float optimalTemperature = getCurrentOptimalTemperature();
-            [blueLightClient setStrength:optimalTemperature commit:YES];
-            [blueLightClient setEnabled:YES];
+            Status status;
+            [blueLightClient getBlueLightStatus:(&status)];
+            
+            if (status.enabled == FALSE) {
+                NSLog(@"turning on");
+                // Enables Night Shift and set temperature automatically.
+                float optimalTemperature = 1; //getCurrentOptimalTemperature();
+                [blueLightClient setStrength:optimalTemperature commit:YES];
+                [blueLightClient setEnabled:YES];
+            } else {
+                NSLog(@"turning off");
+                [blueLightClient setEnabled:NO];
+            }
+            
         } else if (argc == 2) {
             // Enable or disable Night Shift.
             if (strcmp(argv[1], "enable") == 0) {
@@ -84,7 +50,7 @@ int main(int argc, const char * argv[]) {
                 return 0;
             }
 
-            [blueLightClient setStrength:newNightShiftTemperature commit:true];
+            [blueLightClient setStrength:newNightShiftTemperature commit:YES];
         }
     }
     return 0;
