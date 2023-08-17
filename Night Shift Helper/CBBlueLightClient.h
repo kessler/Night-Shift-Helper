@@ -12,9 +12,25 @@
 #import <Foundation/Foundation.h>
 
 typedef struct {
-    BOOL _;
+    int hour;
+    int minute;
+} Time;
+
+typedef struct {
+    Time start;
+    Time end;
+} Schedule;
+
+typedef struct {
+    BOOL active;
     BOOL enabled;
+    BOOL sunSchedulePermitted;
+    int mode;
+    Schedule schedule;
+    unsigned long long disableFlags;
+    BOOL available;
 } Status;
+
 
 /// This is a partial copy of the CBBlueLightClient interface in the private CoreBrightness framework.
 @interface CBBlueLightClient: NSObject
