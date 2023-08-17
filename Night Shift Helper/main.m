@@ -18,13 +18,11 @@ int main(int argc, const char * argv[]) {
             [blueLightClient getBlueLightStatus:(&status)];
             
             if (status.enabled == FALSE) {
-                NSLog(@"turning on");
                 // Enables Night Shift and set temperature automatically.
                 float optimalTemperature = 1; //getCurrentOptimalTemperature();
                 [blueLightClient setStrength:optimalTemperature commit:YES];
                 [blueLightClient setEnabled:YES];
             } else {
-                NSLog(@"turning off");
                 [blueLightClient setEnabled:NO];
             }
             
